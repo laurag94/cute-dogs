@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
+  <div class=" bg-blue-100">
 
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <HelloWorld />
   </div>
 </template>
 

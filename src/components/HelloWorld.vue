@@ -1,11 +1,11 @@
 <template>
   <div class="container max-w-3xl mx-auto">
-    <h1 class="text-xl font-bold text-center mt-4">¡¡Bienvenid@!!</h1>
+    <h1 class="text-xl font-bold text-center pt-4">¡¡Bienvenid@!!</h1>
     <p
       class="text-center"
     >A continuación tienes un montón de razas de perretes. Clickea en ellas para poder ver fotos de cada una de las razas y que sea más amena esta cuarentena :)</p>
 
-    <div class=" mx-auto mt-4">
+    <div class="mx-auto mt-4">
       <input
         v-model="searchByBreed"
         class="shadow appearance-none border rounded w-64 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
@@ -34,9 +34,7 @@ import axios from "axios";
 
 export default {
   name: "HelloWorld",
-  props: {
-    msg: String
-  },
+
   data() {
     return {
       breeds: {},
@@ -50,8 +48,7 @@ export default {
       return Object.keys(this.breeds).filter(breed =>
         breed.toLowerCase().includes(this.searchByBreed.toLowerCase())
       );
-    },
-
+    }
   },
   methods: {
     getBreeds() {
