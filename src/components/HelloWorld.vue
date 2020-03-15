@@ -1,62 +1,77 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-jest" target="_blank" rel="noopener">unit-jest</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-e2e-cypress" target="_blank" rel="noopener">e2e-cypress</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="container max-w-3xl mx-auto">
+    <h1 class="text-xl font-bold text-center mt-4">¡¡Bienvenid@!!</h1>
+    <p
+      class="text-center"
+    >A continuación tienes un montón de razas de perretes. Clickea en ellas para poder ver fotos de cada una de las razas y que sea más amena esta cuarentena :)</p>
+
+    <div class=" mx-auto mt-4">
+      <input
+        v-model="searchByBreed"
+        class="shadow appearance-none border rounded w-64 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+        id="breed"
+        type="text"
+        placeholder="Busca tu raza favorita!"
+      />
+
+      <ul class>
+        <li class="cursor-pointer" v-for="breed in filteredByBreed" :key="breed.id">
+          <div class="text-indigo-700" @click="getImagesByBreed(breed)">-{{ breed }}</div>
+          <div @click="getSubBreeds()"></div>
+          <div class="flex flex-wrap" v-if="selectedBreed === breed">
+            <div v-for="(image, index) in imagesByBreed" :key="image.id">
+              <img v-if="index < 10" class="h-24 m-2" :src="image" :alt="index" />
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
     msg: String
+  },
+  data() {
+    return {
+      breeds: {},
+      searchByBreed: "",
+      selectedBreed: [],
+      imagesByBreed: []
+    };
+  },
+  computed: {
+    filteredByBreed() {
+      return Object.keys(this.breeds).filter(breed =>
+        breed.toLowerCase().includes(this.searchByBreed.toLowerCase())
+      );
+    },
+
+  },
+  methods: {
+    getBreeds() {
+      axios
+        .get("https://dog.ceo/api/breeds/list/all")
+        .then(response => (this.breeds = response.data.message));
+    },
+    getImagesByBreed(breed) {
+      this.selectedBreed = breed;
+      axios
+        .get("https://dog.ceo/api/breed/" + breed + "/images")
+        .then(response => (this.imagesByBreed = response.data.message));
+    }
+  },
+  created() {
+    this.getBreeds();
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style scoped>
 </style>
